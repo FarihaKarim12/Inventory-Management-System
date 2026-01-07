@@ -56,7 +56,7 @@ The system supports Admin and Cashier roles, includes a Dashboard summary, and e
 - File Handling  
 - Virtual & Pure Virtual Functions  
 
-## 🧩 Class Structure
+## Class Structure
 
 ### Product
 - Attributes: ID, Name, Price, Quantity
