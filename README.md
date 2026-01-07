@@ -105,3 +105,6 @@ The system supports Admin and Cashier roles, includes a Dashboard summary, and e
 3. Verified billing totals manually
 4. Tested low-stock conditions
 5. Checked invalid product IDs and large quantity requests
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you'd like to contribute.
