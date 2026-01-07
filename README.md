@@ -1,7 +1,6 @@
 # Inventory Management System
 
-This project is a console-based Inventory Management System developed in C++ using Object-Oriented Programming (OOP) principles.  
-It is designed for a small shop or store to manage products, handle billing, and maintain inventory records with role-based access.
+This project is a console-based Inventory Management System developed in C++ using Object-Oriented Programming (OOP) principles. It is designed for a small shop or store to manage products, handle billing, and maintain inventory records with role-based access.
 The system supports Admin and Cashier roles, includes a Dashboard summary, and ensures data persistence using file handling.
 
 ## Features
