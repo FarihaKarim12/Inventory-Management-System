@@ -1,14 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <iomanip>
 #include <ctime>
 #include <windows.h>
 using namespace std;
 
 void showDashboard(int totalProducts, int lowStock) {
     system("cls");
-    system("color D0");
+    system("color E0");
 
     time_t now = time(0);
     char* dt = ctime(&now);
@@ -38,10 +37,7 @@ private:
 
 public:
     Product() {
-        id = 0;
-        name = "";
-        price = 0;
-        quantity = 0;
+        id = 0; name = ""; price = 0; quantity = 0;
     }
 
     Product(int id, string name, float price, int quantity) {
@@ -68,15 +64,25 @@ public:
 
     void display() const {
         cout << "ID: " << id << "  Name: " << name
-             << "  Price: " << price << "  Qty: " << quantity << endl;
+            << "  Price: " << price << "  Qty: " << quantity << endl;
     }
 
-    int getID() const { return id; }
-    string getName() const { return name; }
-    float getPrice() const { return price; }
-    int getQuantity() const { return quantity; }
+    int getID()const{
+	    return id;
+	}
+    string getName()const{
+	    return name;
+	}
+    float getPrice()const{
+		return price;
+	}
+    int getQuantity()const{
+		return quantity; 
+	}
 
-    void setQuantity(int q) { quantity = q; }
+    void setQuantity(int q) {
+		quantity = q; 
+	}
 
     void saveToFile(ofstream& out) {
         out << id << endl;
@@ -101,9 +107,13 @@ private:
     int count;
 
 public:
-    Inventory() { count = 0; }
+    Inventory() {
+		count = 0; 
+	}
 
-    int getCount() { return count; }
+    int getCount() {
+		return count;
+	}
 
     int getLowStock() {
         int low = 0;
@@ -134,9 +144,8 @@ public:
     }
 
     int searchProduct(int id) {
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
             if (products[i].getID() == id) return i;
-        }
         return -1;
     }
 
@@ -144,10 +153,26 @@ public:
         int idx = searchProduct(id);
         if (idx == -1) {
             cout << "Product Not Found!" << endl;
-        } else {
+        }
+        else {
             products[idx].setQuantity(newQty);
             cout << "Quantity Updated!" << endl;
         }
+    }
+
+    void deleteProduct(int id) {
+        int idx = searchProduct(id);
+        if (idx == -1) {
+            cout << "Product Not Found!" << endl;
+            return;
+        }
+
+        for (int i = idx; i < count - 1; i++) {
+            products[i] = products[i + 1];
+        }
+
+        count--;
+        cout << "Product Deleted Successfully!" << endl;
     }
 
     void saveInventory() {
@@ -161,7 +186,8 @@ public:
 
     void loadInventory() {
         ifstream in("inventory.txt");
-        if (!in) return;
+        if (!in)
+			return;
 
         in >> count;
         for (int i = 0; i < count; i++)
@@ -203,20 +229,41 @@ public:
         int choice;
         do {
             cout << "\n--- Admin Menu ---\n";
-            cout << "1. Add Product\n2. Show All\n3. Update Quantity\n4. Save\n5. Exit\nEnter choice: ";
+            cout << "1. Add Product\n";
+            cout << "2. Show All Products\n";
+            cout << "3. Update Quantity\n";
+            cout << "4. Delete Product\n";
+            cout << "5. Save Inventory\n";
+            cout << "6. Exit\n";
+            cout << "Enter choice: ";
             cin >> choice;
 
-            if (choice == 1) inv.addProduct();
-            else if (choice == 2) inv.showAll();
-            else if (choice == 3) {
-                int id, qty;
-                cout << "Enter Product ID: "; cin >> id;
-                cout << "Enter New Quantity: "; cin >> qty;
-                inv.updateQuantity(id, qty);
-            }
-            else if (choice == 4) inv.saveInventory();
+            switch (choice) {
+                case 1: inv.addProduct(); break;
+                case 2: inv.showAll(); break;
+                case 3: {
+                    int id, qty;
+                    cout << "Enter Product ID: "; cin >> id;
+                    cout << "Enter New Quantity: "; cin >> qty;
+                    inv.updateQuantity(id, qty);
+                    break;
+                }
+                case 4: {
+                    int id;
+                    cout << "Enter Product ID to Delete: ";
+                    cin >> id;
+                    inv.deleteProduct(id);
+                    break;
+                }
+                case 5: inv.saveInventory(); break;
 
-        } while (choice != 5);
+                case 6: break;
+
+                default:
+                    cout << "Invalid choice! Please enter again.\n";
+            }
+
+        } while (choice != 6);
     }
 };
 
@@ -283,6 +330,8 @@ public:
                 else cout << "Available!" << endl;
             }
             else if (choice == 3) createBill(inv);
+            else if (choice != 4)
+                cout << "Invalid choice! Please enter again.\n";
 
         } while (choice != 4);
     }
@@ -295,27 +344,30 @@ int main() {
     int totalProducts = inv.getCount();
     int lowStock = inv.getLowStock();
 
-    showDashboard(totalProducts, lowStock);
-
     int dashChoice;
-    cin >> dashChoice;
+
+    while (true) {
+        showDashboard(totalProducts, lowStock);
+        cin >> dashChoice;
+
+        if (dashChoice == 1 || dashChoice == 2 || dashChoice == 3)
+            break;
+
+        cout << "\nInvalid choice! Please enter 1, 2, or 3.\n";
+        system("pause");
+    }
 
     if (dashChoice == 3) {
         cout << "Exiting...";
         return 0;
     }
 
-    cout << "\nLogin as: 1. Admin  2. Cashier: ";
-    int role;
-    cin >> role;
-
-    if (role == 1) {
+    if (dashChoice == 1) {
         Admin a("admin", "1234");
-        if (a.login()) {
+        if (a.login())
             a.menu(inv);
-        }
     }
-    else {
+    else if (dashChoice == 2) {
         Cashier c("cashier");
         c.menu(inv);
     }
